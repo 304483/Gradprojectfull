@@ -47,7 +47,7 @@ jobs:
 
       - name: Run Order Test
 
-        run: ./gradlew orderTest --scan
+        run: ./gradlew orderTest
         env:
           JAVA_TOOL_OPTIONS: >
             -Ddb.url=jdbc:postgresql://localhost:5432/testdb
