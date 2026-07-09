@@ -49,3 +49,31 @@ jobs:
             -Ddb.url=jdbc:postgresql://localhost:5432/testdb
             -Ddb.user=postgres
             -Ddb.password=postgres
+
+        # Checkout the gh-pages branch (contains previous report/history)
+      - name: Checkout gh-pages
+        if: always()
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      # Generate Allure report with history
+      - name: Generate Allure Report
+        if: always()
+        uses: simple-elf/allure-report-action@master
+        with:
+          gh_pages: gh-pages
+          allure_history: allure-history
+          allure_results: build/allure-results
+          allure_report: build/allure-report
+
+      # Publish to GitHub Pages
+      - name: Deploy Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history

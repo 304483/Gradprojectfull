@@ -1,5 +1,7 @@
 plugins {
     java
+    id("io.qameta.allure") version "2.12.0"
+
 }
 
 group = "com.ust.sdet"
@@ -21,13 +23,16 @@ java {
     sourceCompatibility = JavaVersion.VERSION_22
     targetCompatibility = JavaVersion.VERSION_22
 }
+allure {
+    version.set("2.33.0")
+}
 
 dependencies {
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))
     testImplementation(platform("io.cucumber:cucumber-bom:$cucumberVersion"))
     testImplementation(platform("io.qameta.allure:allure-bom:$allureVersion"))
     testImplementation(platform("org.testcontainers:testcontainers-bom:$testcontainersVersion"))
-
+    testImplementation("io.qameta.allure:allure-junit5")
     testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumVersion")
     testImplementation("com.codeborne:selenide:$selenideVersion")
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -55,6 +60,10 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+    systemProperty(
+        "allure.results.directory",
+        layout.buildDirectory.dir("allure-results").get().asFile.absolutePath
+    )
     systemProperty("baseUrl", providers.gradleProperty("baseUrl").orElse("http://localhost:5173").get())
     systemProperty("headless", providers.gradleProperty("headless").orElse("false").get())
     systemProperty("browser", providers.gradleProperty("browser").orElse("chrome").get())
@@ -75,6 +84,7 @@ tasks.test {
     description = "Runs the main Selenium/JUnit regression tests."
     group = "verification"
     useJUnitPlatform()
+
     include("**/CatalogPOMTest.class", "**/Refactoring_Test.class")
     maxParallelForks = 1
 }
