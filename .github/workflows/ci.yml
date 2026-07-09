@@ -1,25 +1,53 @@
-name: Gradle CI
+name: Order Repository CI
 
 on:
   push:
-    branches: [main, master]
+    branches:
+      - main
   pull_request:
-    branches: [main, master]
 
 jobs:
-  test:
-    runs-on: windows-latest
+  order-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
-      - name: Check out repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 22
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "22"
-          cache: gradle
+          java-version: 22
 
-      - name: Run tests
-        run: .\gradlew.bat test
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x gradlew
+
+      - name: Run Order Test
+        run: ./gradlew orderTest --scan
+        env:
+          JAVA_TOOL_OPTIONS: >
+            -Ddb.url=jdbc:postgresql://localhost:5432/testdb
+            -Ddb.user=postgres
+            -Ddb.password=postgres
