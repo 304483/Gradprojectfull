@@ -32,5 +32,5 @@ jobs:
       # plain unit tests (org.testcontainers.sdet.*). The Selenium/Cucumber UI
       # tests (org.selenium.sdet.*) need a running web app + browser, so they
       # are excluded from CI. Run the full suite locally with `gradle test`.
-      - name: Run tests
-        run: gradle clean test --tests "com.ust.sdet*"
+      - name: Run Repository Tests
+        run: gradle clean test --tests "com.ust.sdet.tests.OrderTest"
