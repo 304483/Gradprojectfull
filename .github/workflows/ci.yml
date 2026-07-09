@@ -66,4 +66,4 @@ jobs:
         if: always()
         run: |
           echo "✅ Order tests completed"
-          echo "📊 Report: https://<your-org>.github.io/Gradprojectfull/"
+          echo "📊 Report: https://304483.github.io/Gradprojectfull/"
