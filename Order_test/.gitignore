@@ -1,0 +1,10 @@
+.idea/
+**/.idea/
+**/.gradle/
+**/build/
+**/gradlew.bat
+**/gradlew
+node_modules/
+Gradle_Project/scripts/
+Gradle_Project/.env
+.github/modernize/*
