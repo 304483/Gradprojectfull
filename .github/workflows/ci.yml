@@ -1,20 +1,15 @@
 name: Order Repository CI
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 on:
   push:
-    branches:
-      - main
-      - master
-  pull_request:
+    branches: [main, master]
 
 jobs:
-  order-test:
+  build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     services:
       postgres:
@@ -32,51 +27,43 @@ jobs:
           --health-retries=5
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Java
+      - name: Set up JDK 22
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "22"
 
-      # Install Gradle on the runner (no gradle-wrapper.jar required)
-      - name: Setup Gradle
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.10.2"
 
-      - name: Run Order Test
-        run: gradle --no-configuration-cache clean orderTest
+      - name: Run Order Tests
+        run: gradle clean orderTest --no-configuration-cache
         env:
           JAVA_TOOL_OPTIONS: >
             -Ddb.url=jdbc:postgresql://localhost:5432/testdb
             -Ddb.user=postgres
             -Ddb.password=postgres
 
-      - name: Checkout gh-pages
-        if: always()
-        continue-on-error: true
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: gh-pages
-
       - name: Generate Allure Report
-        if: always()
         uses: simple-elf/allure-report-action@master
+        if: always()
         with:
-          gh_pages: gh-pages
-          allure_history: allure-history
           allure_results: build/allure-results
-          allure_report: build/allure-report
-          keep_reports: 20
+          allure_history: allure-history
 
       - name: Deploy to GitHub Pages
-        if: always()
         uses: peaceiris/actions-gh-pages@v3
+        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
+          publish_dir: allure-report
+
+      - name: Report Link
+        if: always()
+        run: |
+          echo "✅ Order tests completed"
+          echo "📊 Report: https://<your-org>.github.io/Gradprojectfull/"
