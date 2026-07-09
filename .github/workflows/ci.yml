@@ -43,7 +43,7 @@ jobs:
           gradle-version: "8.10.2"
 
       - name: Run Order Test
-        run: gradle clean orderTest
+        run: gradle --no-configuration-cache clean orderTest
         env:
           JAVA_TOOL_OPTIONS: >
             -Ddb.url=jdbc:postgresql://localhost:5432/testdb
