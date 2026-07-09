@@ -8,7 +8,6 @@ on:
 
 jobs:
   order-test:
-
     runs-on: ubuntu-latest
 
     services:
@@ -30,7 +29,6 @@ jobs:
           --health-retries=5
 
     steps:
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -48,7 +46,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Order Test
-        working-directory: Gradle_Project
+        working-directory: ORDER_TEST
         run: ./gradlew orderTest --scan
         env:
           JAVA_TOOL_OPTIONS: >
