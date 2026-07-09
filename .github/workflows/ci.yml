@@ -55,7 +55,7 @@ jobs:
             -Ddb.user=postgres
             -Ddb.password=postgres
 
-            - name: Checkout gh-pages
+      - name: Checkout gh-pages
         if: always()
         continue-on-error: true
         uses: actions/checkout@v4
