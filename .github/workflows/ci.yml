@@ -46,7 +46,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Order Test
-        working-directory: ORDER_TEST
+        working-directory: Order_test
         run: ./gradlew orderTest --scan
         env:
           JAVA_TOOL_OPTIONS: >
