@@ -1,0 +1,6 @@
+"BROKEN","CATEGORY","FAILED","PASSED","SKIPPED","UNKNOWN"
+"0","Assertion Failures","3","0","0","0"
+"3","Illegal Argument Errors","0","0","0","0"
+"2","Null Pointer Errors","0","0","0","0"
+"1","Arithmetic Errors","0","0","0","0"
+"1","Database Failures","0","0","0","0"
