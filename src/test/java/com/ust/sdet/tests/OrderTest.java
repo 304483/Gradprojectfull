@@ -45,6 +45,17 @@ public class OrderTest {
 
         assertEquals(1, repo.count());
     }
+    @Test
+    void creatOder() {
+
+        factory.persisted(
+                OrderBuilder.anOrder()
+                        .withQty(3)
+                        .build()
+        );
+
+        assertEquals(2, repo.count());
+    }
 
     @Test
     void countsOrders() {

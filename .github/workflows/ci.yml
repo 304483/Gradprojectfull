@@ -57,6 +57,12 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
+      - name: Copy Allure Categories
+        if: always()
+        run: |
+          mkdir -p build/allure-results
+          cp src/test/resources/categories.json build/allure-results/categories.json
+
       # Generate report with history
       - name: Generate Allure Report
         if: always()
