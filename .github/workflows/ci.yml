@@ -48,13 +48,27 @@ jobs:
             -Ddb.user=postgres
             -Ddb.password=postgres
 
-      - name: Generate Allure Report
-        uses: simple-elf/allure-report-action@master
+          # Restore previous history
+      - name: Checkout gh-pages
         if: always()
+        continue-on-error: true
+        uses: actions/checkout@v4
         with:
-          allure_results: build/allure-results
-          allure_history: allure-history
+          ref: gh-pages
+          path: gh-pages
 
+      # Generate report with history
+      - name: Generate Allure Report
+        if: always()
+        uses: simple-elf/allure-report-action@master
+        with:
+          gh_pages: gh-pages
+          allure_results: build/allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 20
+
+      # Downloadable offline report
       - name: Upload Allure Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -62,15 +76,18 @@ jobs:
           name: allure-report
           path: allure-report
 
+      # Update history on gh-pages
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
         if: always()
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
+          publish_branch: gh-pages
+          publish_dir: allure-history
 
       - name: Report Link
         if: always()
         run: |
           echo "✅ Order tests completed"
-          echo "📊 Report: https://304483.github.io/Gradprojectfull/"
+          echo "📊 Offline report is available under Artifacts"
+          echo "🌐 GitHub Pages: https://304483.github.io/Gradprojectfull/"
