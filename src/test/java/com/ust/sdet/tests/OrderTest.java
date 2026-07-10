@@ -35,36 +35,79 @@ public class OrderTest {
     }
 
     @Test
-    void createsOrder() {
+void createsOrder() {
+    factory.persisted(
+            OrderBuilder.anOrder()
+                    .withQty(3)
+                    .build()
+    );
+    assertEquals(1, repo.count());
+}
 
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .withQty(3)
-                        .build()
-        );
+@Test
+void createsSecondOrder() {
+    factory.persisted(OrderBuilder.anOrder().build());
+    assertEquals(1, repo.count());
+}
 
-        assertEquals(1, repo.count());
-    }
-    @Test
-    void creatOder() {
+@Test
+void createsLargeQuantityOrder() {
+    factory.persisted(
+            OrderBuilder.anOrder()
+                    .withQty(100)
+                    .build()
+    );
+    assertEquals(1, repo.count());
+}
 
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .withQty(3)
-                        .build()
-        );
+@Test
+void createsSingleQuantityOrder() {
+    factory.persisted(
+            OrderBuilder.anOrder()
+                    .withQty(1)
+                    .build()
+    );
+    assertEquals(1, repo.count());
+}
 
-        assertEquals(2, repo.count());
-    }
+@Test
+void repositoryResetWorks() {
+    factory.persisted(OrderBuilder.anOrder().build());
+    repo.reset();
+    assertEquals(0, repo.count());
+}
 
-    @Test
-    void countsOrders() {
+@Test
+void multipleResetsKeepRepositoryEmpty() {
+    repo.reset();
+    repo.reset();
+    assertEquals(0, repo.count());
+}
 
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .build()
-        );
+@Test
+void countsOrders() {
+    factory.persisted(OrderBuilder.anOrder().build());
+    assertEquals(1, repo.count());
+}
 
-        assertEquals(1, repo.count());
-    }
+/* ---------- Intentionally failing tests ---------- */
+
+@Test
+void createOrderShouldFail() {
+    factory.persisted(OrderBuilder.anOrder().build());
+    assertEquals(2, repo.count()); // Fail
+}
+
+@Test
+void repositoryShouldContainFiveOrders() {
+    factory.persisted(OrderBuilder.anOrder().build());
+    assertEquals(5, repo.count()); // Fail
+}
+
+@Test
+void resetShouldStillContainOneOrder() {
+    factory.persisted(OrderBuilder.anOrder().build());
+    repo.reset();
+    assertEquals(1, repo.count()); // Fail
+}
 }
