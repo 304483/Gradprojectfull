@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Assertion Failures",
+    "matchedStatuses": ["failed"],
+    "traceRegex": ".*AssertionFailedError.*"
+  },
+  {
+    "name": "Broken Tests",
+    "matchedStatuses": ["broken"]
+  },
+  {
+    "name": "Skipped Tests",
+    "matchedStatuses": ["skipped"]
+  }
+]
