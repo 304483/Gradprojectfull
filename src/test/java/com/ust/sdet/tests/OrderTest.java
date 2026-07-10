@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.sql.SQLException;
+
 @Epic("Order Management")
 @Feature("Order Repository")
 public class OrderTest {
@@ -36,151 +38,115 @@ public class OrderTest {
     void setup() {
         repo.reset();
     }
+       // ---------------- PASSING TESTS ----------------
 
-    @Story("Create Order")
+    @Story("Passing Test")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Simple passing test.")
+    @Test
+    void passingTest1() {
+        assertEquals(1, 1);
+    }
+
+    @Story("Passing Test")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Another passing test.")
+    @Test
+    void passingTest2() {
+        assertEquals("UST", "UST");
+    }
+
+    // ---------------- ASSERTION FAILURES ----------------
+
+    @Story("Assertion Failure")
     @Severity(SeverityLevel.CRITICAL)
-    @Description("Verify that an order is created successfully.")
+    @Description("Intentional assertion failure.")
     @Test
-    void createsOrder() {
-
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .withQty(3)
-                        .build()
-        );
-
-        assertEquals(1, repo.count());
+    void assertionFailure1() {
+        assertEquals(2, 1);
     }
 
-    @Story("Create Second Order")
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Verify another order can be created.")
-    @Test
-    void createsSecondOrder() {
-
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .build()
-        );
-
-        assertEquals(1, repo.count());
-    }
-
-    @Story("Large Quantity Order")
+    @Story("Assertion Failure")
     @Severity(SeverityLevel.CRITICAL)
-    @Description("Verify order creation with large quantity.")
+    @Description("Intentional assertion failure.")
     @Test
-    void createsLargeQuantityOrder() {
-
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .withQty(100)
-                        .build()
-        );
-
-        assertEquals(1, repo.count());
+    void assertionFailure2() {
+        assertEquals(10, 5);
     }
 
-    @Story("Single Quantity Order")
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Verify order creation with quantity one.")
+    @Story("Assertion Failure")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Intentional assertion failure.")
     @Test
-    void createsSingleQuantityOrder() {
-
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .withQty(1)
-                        .build()
-        );
-
-        assertEquals(1, repo.count());
+    void assertionFailure3() {
+        assertEquals("ABC", "XYZ");
     }
 
-    @Story("Repository Reset")
-    @Severity(SeverityLevel.MINOR)
-    @Description("Verify repository reset removes all orders.")
-    @Test
-    void repositoryResetWorks() {
+    // ---------------- NULL POINTER ----------------
 
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .build()
-        );
-
-        repo.reset();
-
-        assertEquals(0, repo.count());
-    }
-
-    @Story("Multiple Reset")
-    @Severity(SeverityLevel.MINOR)
-    @Description("Verify multiple repository resets keep it empty.")
-    @Test
-    void multipleResetsKeepRepositoryEmpty() {
-
-        repo.reset();
-        repo.reset();
-
-        assertEquals(0, repo.count());
-    }
-
-    @Story("Count Orders")
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Verify repository count after creating one order.")
-    @Test
-    void countsOrders() {
-
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .build()
-        );
-
-        assertEquals(1, repo.count());
-    }
-
-    // ------------------ Intentionally Failing Tests ------------------
-
-    @Story("Invalid Order Count")
+    @Story("Null Pointer")
     @Severity(SeverityLevel.BLOCKER)
-    @Description("Intentional failure to demonstrate Allure Categories.")
+    @Description("Intentional NullPointerException.")
     @Test
-    void createOrderShouldFail() {
-
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .build()
-        );
-
-        assertEquals(2, repo.count());
+    void nullPointer1() {
+        String value = null;
+        value.length();
     }
 
-    @Story("Repository Count Validation")
+    @Story("Null Pointer")
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("Intentional NullPointerException.")
+    @Test
+    void nullPointer2() {
+        Object obj = null;
+        obj.toString();
+    }
+
+    // ---------------- ILLEGAL ARGUMENT ----------------
+
+    @Story("Illegal Argument")
     @Severity(SeverityLevel.CRITICAL)
-    @Description("Intentional failure to demonstrate assertion failure.")
+    @Description("Intentional IllegalArgumentException.")
     @Test
-    void repositoryShouldContainFiveOrders() {
-
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .build()
-        );
-
-        assertEquals(5, repo.count());
+    void illegalArgument1() {
+        throw new IllegalArgumentException("Negative quantity");
     }
 
-    @Story("Reset Validation")
+    @Story("Illegal Argument")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Intentional IllegalArgumentException.")
+    @Test
+    void illegalArgument2() {
+        throw new IllegalArgumentException("Invalid customer id");
+    }
+
+    @Story("Illegal Argument")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Intentional IllegalArgumentException.")
+    @Test
+    void illegalArgument3() {
+        throw new IllegalArgumentException("Order id cannot be null");
+    }
+
+    // ---------------- SQL EXCEPTION ----------------
+
+    @Story("Database Failure")
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("Intentional SQLException.")
+    @Test
+    void databaseFailure() throws SQLException {
+        throw new SQLException("Unable to connect to database");
+    }
+
+    // ---------------- ARITHMETIC EXCEPTION ----------------
+
+    @Story("Arithmetic Failure")
     @Severity(SeverityLevel.NORMAL)
-    @Description("Intentional failure after repository reset.")
+    @Description("Intentional ArithmeticException.")
     @Test
-    void resetShouldStillContainOneOrder() {
-
-        factory.persisted(
-                OrderBuilder.anOrder()
-                        .build()
-        );
-
-        repo.reset();
-
-        assertEquals(1, repo.count());
+    void arithmeticFailure() {
+        int x = 10 / 0;
+        System.out.println(x);
     }
+
 }

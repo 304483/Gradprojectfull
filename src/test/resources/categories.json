@@ -5,11 +5,23 @@
     "traceRegex": ".*AssertionFailedError.*"
   },
   {
-    "name": "Broken Tests",
-    "matchedStatuses": ["broken"]
+    "name": "Null Pointer Errors",
+    "matchedStatuses": ["broken"],
+    "traceRegex": ".*NullPointerException.*"
   },
   {
-    "name": "Skipped Tests",
-    "matchedStatuses": ["skipped"]
+    "name": "Illegal Argument Errors",
+    "matchedStatuses": ["broken"],
+    "traceRegex": ".*IllegalArgumentException.*"
+  },
+  {
+    "name": "Database Failures",
+    "matchedStatuses": ["broken"],
+    "traceRegex": ".*SQLException.*"
+  },
+  {
+    "name": "Arithmetic Errors",
+    "matchedStatuses": ["broken"],
+    "traceRegex": ".*ArithmeticException.*"
   }
 ]
